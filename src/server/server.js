@@ -36,7 +36,7 @@ const loadModel = require("../services/loadModel");
         status: "fail",
         message: response.message,
       });
-      newResponse.code(response.statusCode || 400);
+      newResponse.code(response.output.statusCode);
       return newResponse;
     }
     return h.continue;
