@@ -1,16 +1,23 @@
 const Hapi = require("@hapi/hapi");
 const routes = require("../server/routes");
+require("dotenv").config();
+const InputError = require("../exceptions/InputError")
+
+const loadModel = require("../services/loadModel");
 
 (async () => {
   const server = Hapi.server({
     port: 3000,
-    host: "localhost",
+    host: '0.0.0.0',
     routes: {
       cors: {
         origin: ["*"],
       },
     },
   });
+
+  const model = await loadModel();
+  server.app.model = model;
 
   server.route(routes);
 
@@ -21,7 +28,7 @@ const routes = require("../server/routes");
         status: "fail",
         message: `${response.message} Silakan gunakan foto lain.`,
       });
-      newResponse.code(response.statusCode);
+      newResponse.code(response.statusCode || 400);
       return newResponse;
     }
     if (response.isBoom) {
@@ -29,7 +36,7 @@ const routes = require("../server/routes");
         status: "fail",
         message: response.message,
       });
-      newResponse.code(response.statusCode);
+      newResponse.code(response.statusCode || 400);
       return newResponse;
     }
     return h.continue;
