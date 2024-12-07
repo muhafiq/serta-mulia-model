@@ -26,7 +26,7 @@ const loadModel = require("../services/loadModel");
     if (response instanceof InputError) {
       const newResponse = h.response({
         status: "fail",
-        message: `${response.message} Silakan gunakan foto lain.`,
+        message: response.message,
       });
       newResponse.code(response.statusCode || 400);
       return newResponse;
